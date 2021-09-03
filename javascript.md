@@ -199,4 +199,50 @@ console.log(x || y || z);
 <br/>
 
 
+## 문장  
+
+### 세미콜론 자동 삽입  
+
+세미콜론 없이 문장을 끝내고 줄을 분리(화이트 스페이스 삽입)했다면 엔진이 자동으로 삽입해준다  
+한 줄에 이어서 작성하면 삽입하지 않는다  
+
+```javascript
+var x = 1
+var y = 2
+console.log(x + y)
+```
+>3  
+>에러가 나지 않는 것은 줄바꿈으로 각 줄 끝에 세미콜론이 삽입되었기 때문  
+
+<br/>
+
+### strict 모드  
+
+"use strict"를 사용하면 JS 문법을 엄격하게 사용하도록 선언할 수 있다  
+작성한 위치부터 적용된다  
+
+```javascript
+x = "고양이";
+console.log(x);
+```
+>고양이  
+>변수 선언자(var, let, const)를 빼먹었지만 "고양이"가 할당되었다  
+
+<br/>
+
+```javascript
+"use strict";
+try {
+  x = "고양이";
+  console.log(x);
+} catch(error){
+  console.log(error.message);
+}
+```
+>x is not defined
+>변수 선언자가 없기에 에러가 발생해서 catch 구문이 실행되었다  
+
+<br/>
+
+
 
