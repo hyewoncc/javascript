@@ -9,9 +9,12 @@ javascript를 기초부터 공부하면서 몰랐던 사실을 정리합니다
 - [연산자](#연산자)
   - [연산 이전의 숫자 변환](#연산-이전의-숫자-변환)
   - [소수 값의 연산](#소수-값의-연산)
-  - [== 연산자](#==-연산자)
-  - [=== 연산자](#===-연산자)
-  - [&&와 || 연산자의 반환값](#&&와-||-연산자의-반환값)  
+  - [== 연산자](#-연산자)
+  - [=== 연산자](#-연산자-1)
+  - [&&와 || 연산자의 반환값](#와--연산자의-반환값)  
+- [오브젝트](#오브젝트)  
+  - [프로퍼티](#프로퍼티property)
+  - [for~in문으로 프로퍼티 열거](#forin문으로-프로퍼티-열거하기)
 
 
 <hr/>
@@ -241,6 +244,77 @@ try {
 ```
 >x is not defined
 >변수 선언자가 없기에 에러가 발생해서 catch 구문이 실행되었다  
+
+<br/>
+
+## 오브젝트  
+
+### 프로퍼티(property)  
+
+{name : value} 형태로 이루어져 있다  
+value에는 다양한 값이 들어갈 수 있는데, 객체와 함수를 포함한다  
+
+```javascript
+var cat = {
+  color: "gray",
+  habit: {
+    sleep: 20,
+    eat: 3,
+    act: meow(){}
+  }
+}
+```  
+
+<br/>
+
+오브젝트에 프로퍼티를 추가하거나 변경할 수 있다  
+없는 name이라면 추가되고, 있는 name이라면 값이 변경된다  
+방식은 세 가지가 있다  
+
+```javascript
+var cat = {};
+
+// object.name = value 형태  
+cat.color = "gray";
+
+// object[name] = value 형태  
+cat.foot = 4;
+
+// ojbect[변수 이름] = value 형태  
+var key = "color";
+cat[key] = "yellow";
+
+console.log(cat);
+```
+
+>{color: "yellow", foot: 4}  
+
+<br/>
+
+### for~in문으로 프로퍼티 열거하기  
+
+for (변수 in 오브젝트) 또는 for (표현식 in 오브젝트)로 프로퍼티를 열거할 수 있다  
+프로퍼티를 작성한 순서대로 읽힌다는 걸 보장하지 않으나 ES5부터는 보장된다   
+
+```javascript
+var animals = {
+  cat: "고양이",
+  dog: "개",
+  parrot: "앵무새"
+};
+
+for (var animal in animals){
+  console.log(animal);
+  console.log(animals[animal]);
+}
+```
+
+>cat  
+>고양이  
+>dog  
+>개  
+>parrot  
+>앵무새  
 
 <br/>
 
