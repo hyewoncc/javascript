@@ -3,9 +3,9 @@
 javascript를 기초부터 다시 공부하면서 **기존에 몰랐던 사실**을 정리합니다  
 
 - [데이터 타입](#데이터-타입)
-  - [Number 타입의 숨겨진 세 가지](#Number-타입의-숨겨진-세-가지)
-  - [Undefined 타입](#Undefined-타입)
-  - [Object 타입](#Object-타입)
+  - [Number 타입의 숨겨진 세 가지](#number-타입의-숨겨진-세-가지)
+  - [Undefined 타입](#undefined-타입)
+  - [Object 타입](#object-타입)
 - [연산자](#연산자)
   - [연산 이전의 숫자 변환](#연산-이전의-숫자-변환)
   - [소수 값의 연산](#소수-값의-연산)
@@ -15,11 +15,19 @@ javascript를 기초부터 다시 공부하면서 **기존에 몰랐던 사실**
 - [오브젝트](#오브젝트)  
   - [프로퍼티](#프로퍼티property)
   - [for~in문으로 프로퍼티 열거](#forin문으로-프로퍼티-열거하기)  
-  - [프리미티브 값(Primitive Value)](#프리미티브-값Primitive Value)  
-- [Number](#Number)
+  - [프리미티브 값(Primitive Value)](#프리미티브-값primitive-value)  
+- [Number](#number)
   - [toString(), toExponential(), toFixed()](#tostring-toexponential-tofixed)  
-- [String](#String)
+- [String](#string)
   - [length 프로퍼티와 반환 논리 / String 인스턴스의 구조](#length-프로퍼티와-반환-논리--string-인스턴스의-구조)  
+- [Object](#objectes3)
+  - [오브젝트 구분(네이티브/호스트)](#오브젝트-구분네이티브호스트) 
+  - [Object의 인스턴스 생성](#object의-인스턴스-생성)  
+  - [prototype?](#prototype)  
+  - [함수와 메소드의 차이(ES5)](#함수와-메소드의-차이es5)  
+  - [hasOwnProperty()](#hasownproperty)  
+
+
 
 <hr/>
 
@@ -438,6 +446,95 @@ console.log(d.length);
 각각 인덱스 값에 따른 프로퍼티로 저장되어 있는 것을 볼 수 있다  
 
 <br/>
+
+## Object(ES3)  
+
+### 오브젝트 구분(네이티브/호스트)  
+
+자바스크립트의 오브젝트는 크게 네이티브/호스트의 두 가지로 나눌 수 있다  
+
+- 네이티브는 JS 스펙에서 정의한 오브젝트이다  
+  Number, String 같은 빌트인 오브젝트를 포함한다  
+  JS 코드를 싫애할 때 만들어 진다 (예: Argument)
+- 호스트는 빌트인, 네이티브를 제외한 모든 오브젝트이다  
+  window, DOM 등이 여기에 속한다  
+  
+<br/>
+
+### Object의 인스턴스 생성  
+
+new Object()로 생성한 인스턴스는 파라미터의 데이터 타입에 따라 생성할 인스턴스가 결정된다  
+파라미터 값이 undefiend, null이면 빈 Object 인스턴스가 반환된다  
+
+```javascript
+var objectX = new Object(100);
+console.log(objectX + 100);
+var objectY = new Object();
+console.log(objectY);
+```
+>200  
+>{}  
+
+숫자 100을 넣어 생성한 objectX에 숫자와의 연산이 되므로 ojbectX는 Number 타입이다  
+
+<br/>
+
+Object()로 생성한 인스턴스는 {name: value} 형태의 파라미터로 생성할 수 있다  
+역시나 파라미터가 빈다면 빈 Object의 인스턴스가 반환된다 (new Object()와 같다)  
+또, 변수 = {} 형태로도 빈 Object를 만들 수 있다  
+{}를 오브젝트 리터럴(Literal)이라 부른다  
+
+```javascript
+var objectX = Object({dog: "bark"});
+console.log(objectX);
+var objectY = Object();
+console.log(objectY);
+var objectZ = {};
+console.log(objectZ);
+```
+>{dog: "bark"}  
+>{}  
+>{}  
+
+<br/>
+
+### prototype?
+
+프로토타입을 간단하게 정리하자면 다음과 같다  
+- 오브젝트.prototype이 있어야 인스턴스 생성이 가능하다  
+  예시로 계산용 오브젝트인 Math는 프로토타입이 존재하지 않는다  
+  prototype은 프로퍼티를 연결하는 오브젝트이다  
+  예를 들어 오브젝트.prototype.constructor는 오브젝트의 생성자를 연결한다  
+  
+<br//>
+
+### 함수와 메소드의 차이(ES5)  
+
+- 함수는 오브젝트에 연결한다
+  ex) Object.create()
+- 메소드는 프로토타입에 연결한다  
+  ex) Object.prototype.toString()
+
+ES5 공식 문서에서는 function과 method를 위와 같이 구분하고 있다  
+함수는 파라미터에 값을 작성하고, 메소드는 메소드 앞에 값을 작성한다  
+
+<br/>
+
+### hasOwnProperty()  
+
+hasOwnProperty() 메소드는 인스턴스에 파라미터 이름이 프로퍼티로 존재하면 true를, 아니라면 false를 반환한다  
+상속받은 프로퍼티면 false를 반환하는 것에 주의한다  
+
+```javascript
+var objectX = {};
+console.log(objectX.hasOwnProperty("hasOwnProperty"));
+```
+>false  
+
+{hasOwnProperty : hasOwnProperty()}는 인스턴스 자신에 있는 것이 아니라 Object에서 상속 받은 것이다  
+
+<br/>
+
 
 
 
