@@ -506,7 +506,7 @@ console.log(objectZ);
   prototype은 프로퍼티를 연결하는 오브젝트이다  
   예를 들어 오브젝트.prototype.constructor는 오브젝트의 생성자를 연결한다  
   
-<br//>
+<br/>
 
 ### 함수와 메소드의 차이(ES5)  
 
@@ -514,7 +514,7 @@ console.log(objectZ);
   ex) Object.create()
 - 메소드는 프로토타입에 연결한다  
   ex) Object.prototype.toString()
-
+t 
 ES5 공식 문서에서는 function과 method를 위와 같이 구분하고 있다  
 함수는 파라미터에 값을 작성하고, 메소드는 메소드 앞에 값을 작성한다  
 
@@ -534,6 +534,81 @@ console.log(objectX.hasOwnProperty("hasOwnProperty"));
 {hasOwnProperty : hasOwnProperty()}는 인스턴스 자신에 있는 것이 아니라 Object에서 상속 받은 것이다  
 
 <br/>
+
+## Function  
+
+### 함수 선언문과 함수 표현식  
+
+함수 선언문은 function getPlus(n, m){return n+m;};   
+함수 표현식은 var getPlus = function(n, m){return n+m;}; 형식이다  
+
+```javascript
+function getPlus1(n, m){
+  return n + m;
+};
+var x = getPlus1(2, 3);
+console.log(x);
+
+var getPlus2 = function(n, m){
+  return n + m;
+};
+var y = getPlus2(3, 4);
+console.log(y);
+```
+>5  
+>7  
+
+함수 표현식에서 var getPlus = function plus(n, m){return n+m;}; 식으로도 작성 가능하고,  
+이 때 plus를 식별자라 하는데 생략 가능하다  
+둘은 같아보이나 함수 선언문이 함수 표현식보다 먼저 실행(=Function 오브젝트 생성)되는 차이가 있다  
+
+<br/>
+
+### call(), apply(), 
+
+object.call()은 함수를 호출하는 메소드며 파라미터 수가 고정일 때 사용한다  
+첫 번째 파라미터로 this로 참조할 오브젝트를 받고, 옵션으로 호출된 함수로 넘길 파라미터를 넣는다  
+
+```javascript
+function getPlus(n, m) {
+  return n + m;
+};
+var x = getPlus.call(this, 2, 3);
+console.log(x);
+```
+>5  
+이 예시는 첫 번째 파라미터인 this가 파라미터 값으로 넘어가지 않는 예시이다  
+
+<br/>
+
+```javascript
+var nums = {n : 3, m : 4};
+function getPlus() {
+  return this.n + this.m;
+};
+var y = getPlus.call(nums);
+console.log(y);
+```
+>7  
+이 예시는 첫 번째 파라미터가 nums 오브젝트를 참조하기에 this로 프로퍼티에 접근해 값을 구한다  
+
+<br/>
+
+object.apply()는 역시 함수를 호출하는 메소드지만, 파라미터 수가 유동적일 때 사용한다  
+첫 번째 파라미터로 this를, 옵션으로 호출된 함수로 넘길 파라미터를 배열로 넣는다  
+
+```javascript
+function getPlus(n, m){
+  return n + m;
+};
+var x = getPlus.apply(this, [5, 6]);
+console.log(x);
+```
+>11  
+
+<br/>
+
+
 
 
 
