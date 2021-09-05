@@ -14,12 +14,12 @@ javascript를 기초부터 다시 공부하면서 **기존에 몰랐던 사실**
   - [&&와 || 연산자의 반환값](#와--연산자의-반환값)  
 - [오브젝트](#오브젝트)  
   - [프로퍼티](#프로퍼티property)
-  - [for~in문으로 프로퍼티 열거](#forin문으로-프로퍼티-열거하기)
+  - [for~in문으로 프로퍼티 열거](#forin문으로-프로퍼티-열거하기)  
   - [프리미티브 값(Primitive Value)](#프리미티브-값Primitive Value)  
 - [Number](#Number)
-  - [toString(), toExponential(), toFixed()](#toString,-toExponential,-toFixed)  
+  - [toString(), toExponential(), toFixed()](#tostring-toexponential-tofixed)  
 - [String](#String)
-  - [length 프로퍼티와 반환 논리 / String 인스턴스의 구조](#length-프로퍼티와-반환-논리-String-인스턴스의-구조)  
+  - [length 프로퍼티와 반환 논리 / String 인스턴스의 구조](#length-프로퍼티와-반환-논리--string-인스턴스의-구조)  
 
 <hr/>
 
