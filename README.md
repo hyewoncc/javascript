@@ -1,6 +1,6 @@
 # javascript 정석 공부 
 
-javascript를 기초부터 공부하면서 몰랐던 사실을 정리합니다  
+javascript를 기초부터 다시 공부하면서 **기존에 몰랐던 사실**을 정리합니다  
 
 - [데이터 타입](#데이터-타입)
   - [Number 타입의 숨겨진 세 가지](#Number-타입의-숨겨진-세-가지)
@@ -15,7 +15,11 @@ javascript를 기초부터 공부하면서 몰랐던 사실을 정리합니다
 - [오브젝트](#오브젝트)  
   - [프로퍼티](#프로퍼티property)
   - [for~in문으로 프로퍼티 열거](#forin문으로-프로퍼티-열거하기)
-
+  - [프리미티브 값(Primitive Value)](#프리미티브-값Primitive Value)  
+- [Number](#Number)
+  - [toString(), toExponential(), toFixed()](#toString,-toExponential,-toFixed)  
+- [String](#String)
+  - [length 프로퍼티와 반환 논리 / String 인스턴스의 구조](#length-프로퍼티와-반환-논리-String-인스턴스의-구조)  
 
 <hr/>
 
@@ -315,6 +319,123 @@ for (var animal in animals){
 >개  
 >parrot  
 >앵무새  
+
+<br/>
+
+### 프리미티브 값(Primitive Value)  
+
+프리미티브 값이란 가장 낮은 단계의 값을 의미한다
+var cat = "고양이"; 가 있을 때, "고양이"는 더이상 분해하거나 전개할 수 없다  
+따라서 "고양이"는 프리미티브 값이다  
+프리미티브 타입 중 Number, String, Boolean은 인스턴스 생성이 가능하고,  
+Null, Undefined는 인스턴스 생성이 불가하다  
+Object는 프리미티브 값을 제공하지 않는다  
+
+```javascript
+var cat = "고양이";
+var drink = "커피";
+```
+
+<img width="139" alt="스크린샷 2021-09-04 오후 6 50 29" src="https://user-images.githubusercontent.com/80666066/132090328-52cbeb37-a653-419e-9a20-1b410968a9e4.png"> <img width="160" alt="스크린샷 2021-09-04 오후 6 50 24" src="https://user-images.githubusercontent.com/80666066/132090329-77c7ba29-be54-4f75-b3dd-4c3b100581e3.png">  
+
+"고양이"와 "커피"는 프리미티브 값이다  
+
+<br/>
+
+```javascript
+var study = {lang : "자바스크립트"};
+```
+
+<img width="285" alt="스크린샷 2021-09-04 오후 6 56 00" src="https://user-images.githubusercontent.com/80666066/132090431-2b460348-f6b5-42b3-9194-7183815a56b0.png">
+
+Object의 인스턴스에는 프리미티브 값이 존재하지 않는다  
+
+<br/>
+
+```javascript
+var score = new Number(100);
+console.log(score + 100);
+```  
+>200  
+
+<img width="318" alt="스크린샷 2021-09-04 오후 6 57 34" src="https://user-images.githubusercontent.com/80666066/132090483-bcf1e0eb-b069-481e-9b39-9ef598277257.png">
+
+반면 Number의 인스턴스에는 자바스크립트 엔진이 자동으로 대괄호 안에 PrimitiveValue로 파라미터의 값을 저장한다  
+score는 인스턴스므로 원래 값을 더할 수 없는데, 100이 프리미티브 값으로 자동 설정되었기에 가능하다  
+프리미티브 값을 갖는 인스턴스에 연산을 실행하면 값이 계산된다  
+valueOf()로 Number 인스턴스의 프리미티브 값을 반환받을 수 있다  
+
+<br/>
+
+## Number
+
+### toString(), toExponential(), toFixed()  
+
+toString()은 data를 String 타입으로 변환한다  
+주의할 점은, IEEE 754 유동 소수점 처리를 따르기에 정수를 변환할 때 점을 두 개 붙여야 한다는 것이다  
+10.toString()의 경우 20. 까지를 수로 인식하기에 10..toString()이 되어야 한다  
+
+```javascript
+console.log(10.toString());
+console.log(10..toString());
+```
+>Uncaught SyntaxError: Invalid or unexpected token (윗줄만 실행)  
+>10 (아랫줄만 실행)  
+
+<br/>
+
+toExponential()은 숫자를 지수 표기로 변환한 문자열을 반환한다  
+첫 자리만 소수점 앞에 표시되고, 정수에서 소수로 변환된 자릿수가 지수 뒤에 붙는다  
+선택적으로 파라미터에 몇 자리 까지 작성할 지 지정할 수 있으며, 아래 자리에서 반올림한다  
+
+```javascript
+var x = 12345;
+console.log(x.toExponential());
+x = 123456;
+console.log(x.toExponential(4));
+```
+>1.2345e+4  
+>1.2346e+5  
+>
+<br/>
+
+toFixed()는 숫자를 고정 소숫점 표기로 변환한 문자열을 반환한다  
+파라미터로 반환할 소수 이하 자릿수를 정할 수 있고, 적지 않으면 0으로 간주된다  
+변환 대상 자릿수보다 파라미터 값이 크면, 남은 자리를 0으로 채워 반환한다  
+
+```javascript
+var x = 1234.5678;
+console.log(x.toFixed(2));
+console.log(x.toFixed());
+console.log(x.toFixed(7));
+```
+>1234.57  
+>1235  
+>1234.5678000  
+
+<br/>
+
+## String  
+
+### length 프로퍼티와 반환 논리 / String 인스턴스의 구조  
+
+String의 인스턴스에는 문자열 길이를 나타내는 length 프로퍼티가 있다  
+그런데 인스턴스가 아닌 문자열도 length 값을 쓸 수 있는데,  
+이는 자바스크립트 엔진에서 .length를 만나면 내부에서 new String으로 인스턴스를 자동 생성하기 때문이다  
+
+```javascript
+var c = "cat";
+console.log(c.length);
+var d = new String("dog");
+console.log(d.length);
+```
+>3  
+>3  
+
+<img width="137" alt="스크린샷 2021-09-04 오후 9 41 48" src="https://user-images.githubusercontent.com/80666066/132094797-aa2912e4-0105-434b-9f51-60fa9b6482b7.png"> <img width="248" alt="스크린샷 2021-09-04 오후 9 41 53" src="https://user-images.githubusercontent.com/80666066/132094802-e89cbb17-f6eb-46b7-8024-46feb43c8932.png">  
+이처럼 c는 인스턴스가 아니지만 length로 3 값이 있다  
+또, d를 살펴보면 문자열이 인스턴스에 d,o,g로 하나씩 분리되어  
+각각 인덱스 값에 따른 프로퍼티로 저장되어 있는 것을 볼 수 있다  
 
 <br/>
 
