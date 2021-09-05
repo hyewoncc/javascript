@@ -26,7 +26,11 @@ javascript를 기초부터 다시 공부하면서 **기존에 몰랐던 사실**
   - [prototype?](#prototype)  
   - [함수와 메소드의 차이(ES5)](#함수와-메소드의-차이es5)  
   - [hasOwnProperty()](#hasownproperty)  
-
+- [Function](#function)  
+  - [함수 선언문과 함수 표현식](#함수-선언문과-함수-표현식)  
+  - [call(), apply()](#call-apply)  
+- [Global](#global)  
+  - [Global과 Window의 관계](#global과-window의-관계)  
 
 
 <hr/>
@@ -564,7 +568,7 @@ console.log(y);
 
 <br/>
 
-### call(), apply(), 
+### call(), apply()  
 
 object.call()은 함수를 호출하는 메소드며 파라미터 수가 고정일 때 사용한다  
 첫 번째 파라미터로 this로 참조할 오브젝트를 받고, 옵션으로 호출된 함수로 넘길 파라미터를 넣는다  
@@ -608,8 +612,15 @@ console.log(x);
 
 <br/>
 
+## Global
 
+### Global과 Window의 관계  
 
+Global 오브젝트는 JS가 주체인 반면, window 오브젝트는 window가 주체다  
+하지만 Global 오브젝트는 실체가 없으므로 Global 오브젝트의 프로퍼티와 함수는 window 오브젝트에 설정되며,  
+Global 오브젝트의 프로퍼티를 window에서 가져오면 된다  
+
+<br/>
 
 
 
