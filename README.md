@@ -622,5 +622,171 @@ Global 오브젝트의 프로퍼티를 window에서 가져오면 된다
 
 <br/>
 
+## Array(ES3)
+
+### sort()  
+
+배열의 sort() 메소드는 숫자 배열을 정렬 할 경우 숫자에 해당하는 Unicode의 code point로 정렬한다  
+이는 수의 크기 순으로 정렬되지 않을 수 있다는 뜻이다  
+
+```javascript
+var arr = [120, 25, 8, 1300];
+console.log(arr.sort());
+```
+>[120, 1300, 25, 8]  
+
+보시다시피, 8, 25, 120, 1100 순으로 나오지 않는다  
+이는 숫자의 맨 앞자리부터 비교하여 정렬하기 때문이다  
+숫자를 크기순으로 정렬하고 싶다면 파라미터로 콜백 함수를 작성해 넣어야 한다 
+
+<br/>
+
+```javascript
+var arr = [120, 25, 8, 1300];
+arr.sort(function(n, m){
+  return n - m;
+});
+console.log(arr);
+```
+>[8, 25, 120, 1300]  
+
+return m - n 으로 하면 이를 역순 정렬할 수 있다  
+
+<br/>
+
+## Array(ES5)  
+
+### Array의 콜백 함수를 쓰는 프로퍼티들  
+
+아래의 일곱개 메소드는 모두 콜백 함수를 실행한다  
+
+- forEach() : 배열을 순회하며 콜백 함수 실행  
+- every() : 반환 값이 false 일 때 까지 순회하며 콜백 함수 실행  
+- some() : 반환 값이 true일 때 까지 순회하며 콜백 함수 실행  
+- filter() : 반환 값이 true인 엘리먼트 반환  
+- map() : 콜백 함수에서 반환한 값을 새로운 배열로 반환  
+- reduce() : 콜백 함수의 반환 값을 파라미터로 사용  
+- reduceRight() : reduce()와 같으나 배열 역순으로 진행  
+
+<br/>
+
+### forEach()  
+
+forEach()의 콜백 함수는 다음과 같은 형태로 작성한다  
+function(해당 엘리먼트, 인덱스, 전체 배열){}
+
+```javascript
+var x = ["A", "B", "C"];
+x.forEach(function(e, index, arr){
+  console.log(e + " is " + index + " in " + arr);
+});
+```
+>A is 0 in A,B,C  
+>B is 1 in A,B,C  
+>C is 2 in A,B,C
+
+<br/>  
+
+또한, this로 오브젝트를 참조할 수 있다  
+이 오브젝트는 파라미터로 넘어가지는 않는다  
+
+```javascript
+var x = [1, 2, 3, 4];
+var multiplyNine = function(e, index, arr){
+  console.log(e * this.nine);
+};
+x.forEach(multiplyNine, {nine: 9});
+```
+>9  
+>18  
+>27  
+>36  
+
+<br/>
+
+forEach()는 시작할 때 반복 범위를 결정하기에, 중간에 엘리먼트를 추가해도 처리되지 않는다  
+```javascript
+var x = [1, 2, 3];
+x.forEach(function(e, index, arr){
+  x.push(4);
+  console.log(e);
+});
+console.log(x);
+```
+>1  
+>2  
+>3  
+>[1, 2, 3, 4, 4, 4]  
+
+4가 세 개 추가되었지만, 콜백 함수 실행 중엔 출력되지 않는 것을 볼 수 있다  
+하지만, 현재 인덱스 보다 큰 인덱스의 값을 변경하거나 삭제하면 그건 반영이 된다    
+
+```javascript
+var x = [1, 2, 3, 4, 5];
+x.forEach(function(e, index, arr){
+  x[2] = 7;
+  x.pop();
+  console.log(e);
+});
+```  
+>1  
+>2  
+>7  
+
+<br/>
+
+for문과 비교해 forEach()는 시맨틱 접근의 의미를 갖는데, 아래 함의를 갖고 있기 때문이다  
+- 처음부터 끝까지 반복(중간에 끝나지 않음)  
+- 기능 처리는 콜백 함수에서 하며, this 사용 가능  
+- 인덱스 증가 값의 조정 불가  
+- 앞에서 뒤로 가는 단방향만 가능  
+
+<br/>
+
+### reduce()  
+
+reduce()는 배열 끝까지 콜백 함수를 호출하는데, 반환 값을 다시 파라미터로 사용한다  
+
+```javascript
+var x = [1, 2, 3, 4];
+var result = x.reduce(function(pre, crr, index, arr){
+  console.log(pre + " and " + crr);
+  return pre + crr;
+});
+console.log(result);
+```
+>1 and 2  
+>3 and 3  
+>6 and 4  
+>10  
+
+첫 pre는 x[0]의 값이 들어갔지만, 그 다음 부터는 앞서 얻은 return 값이 들어감을 볼 수 있다  
+첫 시작 인덱스가 1이 되기 때문에, 네 번이 아니라 세 번 반복한다  
+
+<br/>
+
+두 번째 파라미터가 있는 경우, 해당 파라미터를 첫 번째 pre로 설정한다  
+
+```javascript
+var x = [1, 2, 3, 4];
+var result = x.reduce(function(pre, crr, index, arr){
+  console.log(pre + " and " + crr);
+  return pre + crr;
+}, 100);
+console.log(result);
+```
+>100 and 1  
+>101 and 2  
+>103 and 3  
+>106 and 4  
+>110  
+
+이 경우는 네 번 반복하는 것을 볼 수 있다  
+reduceRight()는 전부 동일하나, 배열의 뒤에서 앞으로 진행된다  
+
+<br/>
+
+
+
 
 
