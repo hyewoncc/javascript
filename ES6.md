@@ -5,8 +5,11 @@ ES6를 공부하며 기록합니다
   - [let](#let)  
 - [Array](#array)  
   - [for of](#for-of)  
-  - [spread operator(펼침연산자)](#spread-operator펼침연산자). 
+  - [spread operator(펼침연산자)](#spread-operator펼침연산자)  
   - [from](#from)  
+- [Destructuring](#destructuring)
+  - [Destructuring Array](#destructuring-array)  
+  - [Destructuring Object](#destructuring-object)  
 
 
 ## Scope  
@@ -138,4 +141,37 @@ addMark(1, undefined, 3, "dog", 5, null);
 
 <br/>
 
+## Destructuring  
+
+### Destructuring Array  
+
+배열에서 필요한 요소한 추출해 변수에 할당할 수 있다  
+
+```javascript
+let arr = ["cat", "dog", "parrot", "hamster"];
+let [x, , y] = arr;
+console.log(x, y);
+```
+>cat parrot  
+
+<br/>
+
+### Destructuring Object  
+
+객체의 프로퍼티 값을 name으로 추출하고, 새로운 이름의 변수에 할당할 수 있다  
+
+```javascript
+let dog = {
+  color : "black",
+  sound : "bark",
+  age : 5
+}
+let {color, age:old} = dog;
+console.log(color);
+console.log(old);
+```
+>black  
+>5  
+
+<br/>
 
