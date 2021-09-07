@@ -1,6 +1,8 @@
 # javascript 정석 공부 
 
 javascript를 기초부터 다시 공부하면서 **기존에 몰랐던 사실**을 정리합니다  
+해당 문서는 **[인프런 자바스크립트 비기너 강의](https://inf.run/godD)** 를 수강하며 참고해 작성하였습니다  
+
 
 - [데이터 타입](#데이터-타입)
   - [Number 타입의 숨겨진 세 가지](#number-타입의-숨겨진-세-가지)
@@ -1018,8 +1020,3 @@ console.log(Object.isFrozen(frog));
 >true  
 
 <br/>
-
-
-
-
-
