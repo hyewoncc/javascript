@@ -31,6 +31,17 @@ javascript를 기초부터 다시 공부하면서 **기존에 몰랐던 사실**
   - [call(), apply()](#call-apply)  
 - [Global](#global)  
   - [Global과 Window의 관계](#global과-window의-관계)  
+- [Array(ES3)](#arrayes3)  
+  - [Array의 콜백 함수를 쓰는 프로퍼티들](#array의-콜백-함수를-쓰는-프로퍼티들)  
+  - [forEach()](#foreach)  
+  - [reduce()](#reduce)  
+- [Object(SE5)](#objectse5)  
+  - [Object에 프로퍼티 추가](#object에-프로퍼티-추가)  
+  - [프로퍼티 디스크립터](#프로퍼티-디스크립터)  
+  - [프로퍼티 추출](#프로퍼티-추출)  
+  - [프로퍼티 디스크립터 함수](#프로퍼티-디스크립터-함수)  
+
+
 
 
 <hr/>
@@ -783,6 +794,228 @@ console.log(result);
 
 이 경우는 네 번 반복하는 것을 볼 수 있다  
 reduceRight()는 전부 동일하나, 배열의 뒤에서 앞으로 진행된다  
+
+<br/>
+
+
+## Object(SE5)  
+
+### Object에 프로퍼티 추가  
+
+defineProperty()로 대상 오브젝트에 프로퍼티를 추가하거나 속성을 변경할 수 있다  
+프로퍼티마다 변경/삭제/열거 가능 여부 상태를 갖고 있으며, 가능일 때만 해당 처리를 할 수 있다  
+이 상태는 프로퍼티를 추가할 때 결정하게 된다  
+첫 번째 파라미터에 프로퍼티를 추가할 대상 오브젝트를,  
+두 번째 파라미터에 프로퍼티 이름을,  
+세 번째 파라미터에 {value: 값}을 넣어 해당 프로퍼티 값을 설정한다  
+
+```javascript
+var cat = {};
+Object.defineProperty(cat, "species", {
+  value: "cat",
+  enumerable: true
+});
+console.log(cat);
+```
+>{species: "cat"}  
+
+<br/>  
+
+defineProperties()는 다수의 프로퍼티를 추가, 변경하며 기능은 defineProperty()와 동일하다  
+
+```javascript  
+var cat = {};
+Object.defineProperties(cat, {
+  species: {
+    value: "cat", enumerable: true
+  },
+  sound: {
+    value: "meow", enumerable: true
+  },
+  food: {
+    value: "meat", enumerable: false 
+  }
+});
+for (var name in cat){
+  console.log(name + " : " + cat[name]);
+};
+console.log(cat);
+```
+>species : cat  
+>sound : meow  
+>{species: "cat", sound: "meow", food: "meat"}  
+
+세 개의 프로퍼티 값이 정상적으로 설정 되었고,  
+enumerable을 false로 설정한 food만 for문에서 돌지 않아 출력되지 않음을 볼 수 있다  
+
+<br/>
+
+### 프로퍼티 디스크립터  
+
+프로퍼티의 속성 이름과 값을 정의하는 함수이다  
+같은 타입에 속한 속성만 같이 사용할 수 있다  
+
+| 타입  | 속성 이름 | 디폴트 값 | 기능  |
+|:---:|:---|:---|:---|
+| 데이터 | value | undefined | 프로퍼티 값  |
+| 데이터 | writbale  | false | value 값 변경 가능 여부 |
+| 엑세스 | get | undefined | 프로퍼티 값 반환 |
+| 엑세스 | set | undefined | 프로퍼티 값 설정 |
+| 공용  | enumerable  | false | for-in 열거 가능 여부 |
+| 공용  | configurtalbe | false | 프로퍼티 삭제 가능 여부 |  
+
+<br/>
+
+### 프로퍼티 추출  
+
+getPrototypeOf()로 파라미터 인스턴스의 프로퍼티를 반환받을 수 있다  
+
+```javascript
+function Dog(sound){
+  this.sound = sound;
+};
+Dog.prototype.getSound = function(){};
+Dog.prototype.setSound = function(){};
+
+var obj = new Dog("bark");
+var result = Object.getPrototypeOf(obj);
+console.log(result);
+```
+>{getSound: ƒ, setSound: ƒ, constructor: ƒ}  
+
+<br/>
+
+getOwnPropertyNames()로 파라미터 오브젝트의 프로퍼티 이름들의 배열을 반환받을 수 있다  
+열거 가능 여부를 체크하지 않으며, 자신이 만든 프로퍼티만 대상이다  
+
+```javascript
+var dog = {};
+Object.defineProperties(dog, {
+  color: {
+    value: "black",
+    enumerable: true
+  },
+  sound : {
+    value: "bark",
+    enumerable: false
+  }
+});
+var names = Object.getOwnPropertyNames(dog);
+console.log(names);
+```
+>(2) ["color", "sound"]  
+
+color만 열거 가능이고, sound는 열거 불가를 설정헀는데 둘 다 배열에 들어온 것을 볼 수 있다  
+<br/>
+
+반면 keys()는 열거 가능 프로퍼티만 반환해준다  
+
+```javascript
+var dog = {};
+Object.defineProperties(dog, {
+  color: {
+    value: "black",
+    enumerable: true
+  },
+  sound : {
+    value: "bark",
+    enumerable: false
+  }
+});
+var names = Object.keys(dog);
+console.log(names);
+```
+>["color"]  
+
+<br/>  
+
+
+### 프로퍼티 디스크립터 함수  
+
+getOwnPropertyDescriptor()로 해당 프로퍼티의 디스크립터를 반환받을 수 있다  
+getOwnPropertyNames()와 마찬가지로 다른 오브젝트에서 받은 프로퍼티는 제외된다   
+
+```javascript
+var dog = {};
+Object.defineProperties(dog, {
+  color: {
+    value: "black",
+    enumerable: true
+  },
+  sound : {
+    value: "bark",
+    writable:true, enumerable: false
+  }
+});
+var result = Object.getOwnPropertyDescriptor(dog, "sound");
+console.log(result);
+```
+>{value: "bark", writable: true, enumerable: false, configurable: false}  
+
+<br/>
+
+preventExtensions()로 프로퍼티 추가 금지를 설정하고, isExtensible()로 금지 여부를 반환받을 수 있다  
+프로퍼티 삭제, 변경은 가능하며, 설정 후에는 가능으로 변경이 불가하다  
+
+```javascript
+var dog = {};
+Object.preventExtensions(dog);
+try{
+  Object.defineProperty(dog, "color", { value: "dart" });
+} catch (e) {
+  console.log("추가 불가");
+};
+console.log(Object.isExtensible(dog));
+```
+>추가 불가  
+>false  
+
+<br/>
+
+seal()로 오브젝트에 프로퍼티 추가 및 삭제 금지를 설정하고, isSealed()로 금지 여부를 반환받을 수 있다  
+프로퍼티 값 변경은 가능하다  
+
+```javascript
+var parrot = {};
+Object.defineProperty(parrot, "color", {
+  value: "rainbow", writable: true
+});
+
+Object.seal(parrot);
+try{
+  Object.defineProperty(parrot, "speak", {
+    value: true
+  });
+} catch(e) {
+  console.log("추가 불가");
+};
+console.log(Object.isSealed(parrot));
+```
+>추가 불가  
+>true  
+
+<br/>
+
+freeze()로 오브젝트 프로퍼티에 추가, 삭제, 변경 금지를 설정하고, isFrozen()으로 금지 여부를 반환 받을 수 있다  
+
+```javascript
+var frog = {};
+Object.defineProperty(frog, "doing", {
+  value: "jumping", writable: true
+});
+Object.freeze(frog);
+
+try {
+  Object.defineProperty(frog, "doing", {
+    value: "singing"
+  });
+} catch(e) {
+  console.log("변경 불가");
+};
+console.log(Object.isFrozen(frog));
+```
+>변경 불가  
+>true  
 
 <br/>
 
