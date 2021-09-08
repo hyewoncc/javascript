@@ -1,5 +1,5 @@
 ## ES6  
-ES6를 공부하며 기록합니다  
+ES6를 공부하며 새로 배운 사실을 기록합니다  
 
 - [Scope](#scope)  
   - [let](#let)  
@@ -10,6 +10,12 @@ ES6를 공부하며 기록합니다
 - [Destructuring](#destructuring)
   - [Destructuring Array](#destructuring-array)  
   - [Destructuring Object](#destructuring-object)  
+- [Set](#set)  
+  - [WeakSet](#weakset)  
+- [Template](#template)  
+  - [Template](#template-1)  
+  - [Tagged Template Literals](#tagged-template-literals)  
+
 
 
 ## Scope  
@@ -174,4 +180,102 @@ console.log(old);
 >5  
 
 <br/>
+
+## Set
+
+### WeakSet  
+
+weakset은 참조를 가지고 있는 객체만 저장이 가능하다  
+배열, 함수 등의 객체가 여기에 해당하며,  
+기본 타입인 숫자, 문자열, boolean, null, undefined는 저장 불가능하다  
+이는 해당 객체가 null이 되거나 필요가 없어지면 가비지 컬렉션 대상이 되어 weakset에서도 없어지게 된다는 의미다  
+
+```javascript
+let ws = new WeakSet();
+let x = [1, 2, 3, 4];
+let y = [5, 6, 7, 8];
+let z = {x, y};
+
+ws.add(x).add(y).add(z);
+console.log(ws);
+
+x = null;
+console.log(ws);
+
+console.log(ws.has(x), ws.has(y));
+```
+>WeakSet {Array(4), Array(4), {…}}  
+>WeakSet {Array(4), Array(4), {…}}  
+>false true  
+
+처음 x, y, z를 추가한 후 콘솔에 출력하면 당연히 해당 객체들이 들어있다고 나온다  
+이후 x를 null로 설정 후 콘솔에 출력하면 여전히 x가 들어있는 것 처럼 나오지만,  
+has 메소드로 확인 시 x는 false로 들어있지 않고, y는 true로 들어있다는 결과를 보여준다  
+이는 null로 설정 된 x가 가비지 콜렉션 대상이며 weakset에서 없어진 게 맞다는 것이다  
+
+<br/>
+
+## Template  
+
+### Template  
+
+json 데이터를 다룰 때 백틱(`)을 이용해 다음과 같은 방식으로 DOM을 조작할 수 있다  
+
+```javascript
+const data = [
+  {
+    animal : 'cat',
+    color : 'gray', 
+    foods : ['fish', 'tuna', 'snack']
+  },
+  {
+    animal : 'dog', 
+    color : 'black', 
+    foods : ['jerky', 'meet']
+  }
+]
+
+const template = `<div>I gave my ${data[0].color} ${data[0].animal} a ${data[0].foods[2]}</div>`
+                + `<div>You gave your ${data[1].color} ${data[1].animal} a ${data[1].foods[0]}</div>`;
+console.log(template);
+```
+><div>I gave my gray cat a snack</div><div>You gave your black dog a jerky</div>  
+
+<br/>
+
+### Tagged Template Literals  
+
+데이터마다 갖고 있는 정보 양식에 차이가 있을 때, 다음과 같이 Tagged Template Literals 함수를 만들어  
+데이터를 파싱한 후 넘겨줄 수 있다  
+
+```javascript
+const data = [
+  {
+    animal : 'cat',
+    color : 'gray', 
+    foods : ['fish', 'tuna', 'snack']
+  },
+  {
+    animal : 'dog', 
+    color : 'black', 
+  }
+]
+
+function feed(tags, color, animal, foods) {
+  if(typeof foods === "undefined"){
+    foods = "nothing";
+  }
+  return (tags[0] + color + tags[1] + animal + tags[2] + foods + tags[3]);
+}
+data.forEach((d) => {
+  let template = feed`<div>I gave my ${d.color} ${d.animal}</div><div>${d.foods}</div>`;
+  console.log(template);
+});
+```
+><div>I gave my gray cat</div><div>fish,tuna,snack</div>  
+><div>I gave my black dog</div><div>nothing</div>  
+
+<br/>
+
+
 
