@@ -15,7 +15,10 @@ ES6를 공부하며 새로 배운 사실을 기록합니다
 - [Template](#template)  
   - [Template](#template-1)  
   - [Tagged Template Literals](#tagged-template-literals)  
-
+- [function](#function)  
+  - [Arrow function의 this context](#arrow-function의-this-context)  
+  - [default parameters](#default-parameters)  
+  - [rest parameters](#rest-parameters)
 
 
 ## Scope  
@@ -239,7 +242,7 @@ const template = `<div>I gave my ${data[0].color} ${data[0].animal} a ${data[0].
                 + `<div>You gave your ${data[1].color} ${data[1].animal} a ${data[1].foods[0]}</div>`;
 console.log(template);
 ```
-><div>I gave my gray cat a snack</div><div>You gave your black dog a jerky</div>  
+>`<div>I gave my gray cat a snack</div><div>You gave your black dog a jerky</div>`   
 
 <br/>
 
@@ -272,10 +275,116 @@ data.forEach((d) => {
   console.log(template);
 });
 ```
-><div>I gave my gray cat</div><div>fish,tuna,snack</div>  
-><div>I gave my black dog</div><div>nothing</div>  
+>`<div>I gave my gray cat</div><div>fish,tuna,snack</div>`  
+>`<div>I gave my black dog</div><div>nothing</div>`     
 
 <br/>
 
+## function  
+
+### Arrow function의 this context  
+
+es5 까지의 실행 컨텐스트에서 함수의 this는 전역 개체인 window를 가르킨다  
+그래서 오브젝트 내의 함수에서 this가 해당 오브젝트를 가르키게 하려면 바인딩을 해줘야 했다  
+
+```javascript
+const x = {
+  sayHello() {
+    setTimeout(function() {
+      this.hello();
+    }.bind(this), 200);
+  },
+  hello() {
+    console.log("hello everyone");
+  }
+}
+x.sayHello();
+```
+>hello everyone  
+
+<br/>
+
+반면 es6의 arrow function의 this는 자신을 둘러 싼 환경의 this를 계승받는다  
+
+```javascript
+const x = {
+  sayHello() {
+    setTimeout( ()=> {
+      this.hello();
+    }, 200);
+  },
+  hello() {
+    console.log("hello everyone");
+  }
+}
+x.sayHello();
+```
+>hello everyone  
+
+<br/>
+
+### default parameters  
+
+es5까지 함수에 default parameter를 넣는 법은 아래와 같다  
+
+```javascript
+function multiply(x, y) {
+  y = y || 2;
+  return x * y;
+}
+console.log(multiply(3, 5));
+console.log(multiply(3));
+```
+>15  
+>6  
+
+<br/>
+
+위 같은 방식은 파라미터 수가 늘어날 수록 앞쪽 선언부가 길어질 수 밖에 없다  
+es6에서는 파라미터 부분에 다음과 같은 방식으로 설정할 수 있다  
+
+```javascript
+function multiply(x, y = 2) {
+  return x * y;
+}
+console.log(multiply(3, 5));
+console.log(multiply(3));
+```
+>15  
+>6  
+
+<br/>
+
+Object 형태도 사용할 수 있다  
+
+
+```javascript
+function multiply(x, y = {value :2}) {
+  return x * y.value;
+}
+console.log(multiply(3, {name: "size", value: 5}));
+console.log(multiply(3));
+```
+>15  
+>6  
+
+<br/>
+
+### rest parameters  
+
+파라미터를 가변 개수로 받을 때, arguments를 파라미터에서 진짜 배열로 만들어 받을 수 있다  
+
+```javascript
+function checkNum(...argArr) {
+  const result = argArr.every( (x) => typeof x === "number");
+  console.log(result);
+}
+checkNum(1, 2, 3, "4", 5);
+checkNum(10, 20, 30, 40, 50, 60, 70);
+```
+>false  
+>true  
+
+<br/>
 
 
