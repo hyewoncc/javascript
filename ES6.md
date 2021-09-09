@@ -1,5 +1,6 @@
 ## ES6  
 ES6를 공부하며 새로 배운 사실을 기록합니다  
+해당 문서는 **[인프런 무료 ES6 강의](https://inf.run/dozK)** 를 참고해 작성했습니다  
 
 - [Scope](#scope)  
   - [let](#let)  
