@@ -22,9 +22,11 @@ ES6를 공부하며 새로 배운 사실을 기록합니다
 - [객체](#객체)  
   - [class](#class)  
   - [Object assign](#object-assign)  
-  - [setPrototypeOf](#setPrototypeOf)  
+  - [setPrototypeOf](#setprototypeof)  
+- [Proxy](#proxy)  
+  - [proxy interception](#proxy-interception)  
 
-
+<br/>
 
 ## Scope  
 
@@ -557,5 +559,41 @@ animalObj는 talkObj를 프로토타입으로 가져서 sayHello()를 메소드�
 이미 만들어진 다른 객체의 메소드를 사용하고 싶을 때 효율적으로 사용 가능하다  
 
 <br/>
+
+## Proxy  
+
+### proxy interception  
+
+proxy 객체로 interception을 구현할 수 있다  
+
+```javascript 
+const cat = {
+  name : "고양이",
+  color : "노란",
+  changedValue : 0
+}
+const catProxy = new Proxy(cat, {
+  get : function(target, property, receiver) {
+    return Reflect.get(target, property);
+  },
+  set : function(target, property, value) {
+    target["changedValue"]++;
+    target[property] = value;
+  }
+});
+catProxy.color = "까만";
+catProxy.color = "얼룩";
+console.log(cat);
+console.log(catProxy);
+```
+>{name: "고양이", color: "얼룩", changedValue: 2}  
+>Proxy {name: "고양이", color: "얼룩", changedValue: 2}  
+
+proxy를 통해 color 값을 변경했을 때, 원본 cat의 color 값도 변경 된 것을 볼 수 있다  
+또한, set이 호출 됨에 따라 changedValue도 두 차례 올라가 둘 다 2가 되었다  
+
+<br/>
+
+
 
 
