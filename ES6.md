@@ -18,7 +18,12 @@ ES6를 공부하며 새로 배운 사실을 기록합니다
 - [function](#function)  
   - [Arrow function의 this context](#arrow-function의-this-context)  
   - [default parameters](#default-parameters)  
-  - [rest parameters](#rest-parameters)
+  - [rest parameters](#rest-parameters)  
+- [객체](#객체)  
+  - [class](#class)  
+  - [Object assign](#object-assign)  
+  - [setPrototypeOf](#setPrototypeOf)  
+
 
 
 ## Scope  
@@ -384,6 +389,172 @@ checkNum(10, 20, 30, 40, 50, 60, 70);
 ```
 >false  
 >true  
+
+<br/>
+
+## 객체  
+
+### class  
+
+class 생성자를 통해 객체를 생성할 수 있으나, 내부적으로는 기존과 동일하게 구성된다  
+같은 friend 객체를 기존 방식과 es6 class를 이용한 방식으로 생성하면 아래와 같다  
+
+```javascript
+function Friend(name) {
+  this.name = name;
+}
+Friend.prototype.sayHello = function() {
+  console.log("안녕, 나는 " + this.name + "!");
+}
+
+let cat = new Friend("고양이");
+cat.sayHello();
+```
+>안녕, 나는 고양이!  
+
+```javascript
+class Friend {
+  constructor(name) {
+    this.name = name;
+  }
+  sayHello() {
+    console.log("안녕, 나는 " + this.name + "!");
+  }
+}
+
+let parrot = new Friend("앵무새");
+parrot.sayHello();
+```
+>안녕, 나는 앵무새!  
+
+class로 생성했더라도 function이 맞으며, sayHello()는 prototype에 연결되어 있다  
+
+<br/>
+
+### Object assign  
+
+Object assign은 원래 각 객체를 병합하는 함수이다  
+이를 Object create와 함께 이용하여 객체 만들기에 사용할 수 있다  
+
+```javascript
+const talkObj = {
+  sayHello : function() {
+    console.log("안녕, 나는 " + this.color + this.name + "!");
+  }
+}
+const dog = Object.assign(Object.create(talkObj), {
+  name : "강아지",
+  color : "까만"
+});
+console.log(dog.sayHello());
+```
+>안녕, 나는 까만강아지!  
+
+Object create로 생성된 sayHello()를 갖는 프로토 타입과,  
+name, color 프로퍼티가 병합 된 새로운 객체 dog이 생성된 것이다  
+
+<br>
+
+병합하는 객체 프로퍼티 간에 겹치는 것이 있으면, 뒤의 것으로 오버라이딩 된다  
+
+```javascript
+const dog = {
+  name : "강아지",
+  color : "까만"
+}
+const cat = Object.assign({}, dog, {
+  name : "고양이"
+});
+console.log(cat);
+```
+>{name: "고양이", color: "까만"}  
+
+<br/>
+
+생성된 객체는 Immutable로, 값의 변화가 없어도 서로 같은 객체가 아님에 주의한다  
+
+```javascript
+const dog = {
+  name : "강아지",
+  color : "까만"
+}
+const otherDog = Object.assign({}, dog, {});
+console.log(dog === otherDog);
+console.log(otherDog);
+```
+>false  
+>{name: "강아지", color: "까만"}  
+>
+객체를 복사해 완전히 새로운 객체를 만들 때 활용하면 좋다 
+
+<br/>
+
+### setPrototypeOf  
+
+setPrototypeOf()으로 첫 번째 파라미터의 객체의 프로토타입으로 두 번째 파라미터의 객체를 지정할 수 있다  
+
+```javascript
+const talkObj = {
+  sayHello : function() {
+    console.log("안녕, 나는 " + this.color + this.name + "!");
+  }
+}
+const dog = {
+  name : "강아지",
+  color : "까만"
+};
+Object.setPrototypeOf(dog, talkObj);
+console.log(dog.sayHello());
+```
+>안녕, 나는 까만강아지!  
+
+<br/>
+
+위 코드와 동일하게 아래와 같이 쓸 수도 있다  
+
+```javascript
+const talkObj = {
+  sayHello : function() {
+    console.log("안녕, 나는 " + this.color + this.name + "!");
+  }
+}
+const dog = Object.setPrototypeOf({
+  name : "강아지",
+  color : "까만"
+}, talkObj);
+console.log(dog.sayHello());
+```
+>안녕, 나는 까만강아지!  
+
+<br/>
+
+객체간 프로토타입을 체이닝 할 수도 있다  
+
+```javascript
+const talkObj = {
+  sayHello : function() {
+    console.log("안녕, 나는 " + this.color + this.name + "!");
+  }
+}
+const animalObj = {
+  setColor : function(color) {
+    this.color = color;
+  }
+}
+Object.setPrototypeOf(animalObj, talkObj);
+
+const dog = Object.setPrototypeOf({
+  name : "강아지",
+  color : "까만"
+}, animalObj);
+dog.setColor("하얀");
+console.log(dog.sayHello());
+```
+>안녕, 나는 하얀강아지!  
+
+dog 객체는 프로토타입으로 animalObj를 가져서 setColor()를 메소드로 사용할 수 있고,  
+animalObj는 talkObj를 프로토타입으로 가져서 sayHello()를 메소드로 사용할 수 있다  
+이미 만들어진 다른 객체의 메소드를 사용하고 싶을 때 효율적으로 사용 가능하다  
 
 <br/>
 
